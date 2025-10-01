@@ -208,3 +208,17 @@ func (e PhoneEndpoint) prepareEndpoint() Endpoint {
 	e.Type = "phone"
 	return e
 }
+
+//--- Websocket Endpoints ---
+
+type WebSocketEndpoint struct {
+	Type        string                 `json:"type"`
+	Uri         string                 `json:"uri"`
+	ContentType string                 `json:"content-type"`
+	Headers     map[string]interface{} `json:"headers,omitempty"`
+}
+
+func (e WebSocketEndpoint) prepareEndpoint() Endpoint {
+	e.Type = "websocket"
+	return e
+}
