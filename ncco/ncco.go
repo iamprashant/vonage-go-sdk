@@ -211,11 +211,25 @@ func (e PhoneEndpoint) prepareEndpoint() Endpoint {
 
 //--- Websocket Endpoints ---
 
+type WebSocketHeaders struct {
+	Name           string  `json:"name"`
+	Age            int     `json:"age"`
+	Address        Address `json:"address"`
+	SystemRoles    []int   `json:"system_roles"`
+	EnableAuditing bool    `json:"enable_auditing"`
+}
+
+type Address struct {
+	Line1 string `json:"line_1"`
+	Line2 string `json:"line_2"`
+	City  string `json:"city"`
+}
+
 type WebSocketEndpoint struct {
-	Type        string                 `json:"type"`
-	Uri         string                 `json:"uri"`
-	ContentType string                 `json:"content-type"`
-	Headers     map[string]interface{} `json:"headers,omitempty"`
+	Type        string           `json:"type"`
+	Uri         string           `json:"uri"`
+	ContentType string           `json:"content-type"`
+	Headers     WebSocketHeaders `json:"headers"`
 }
 
 func (e WebSocketEndpoint) prepareEndpoint() Endpoint {

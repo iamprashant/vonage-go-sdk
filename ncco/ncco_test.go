@@ -129,6 +129,32 @@ func TestNccoConnectAllPhone(t *testing.T) {
 	}
 }
 
+func TestNccoConnectWebSocket(t *testing.T) {
+	ncco := Ncco{}
+	url := []string{"https://example.com/event"}
+	headers := WebSocketHeaders{
+		Name:           "J Doe",
+		Age:            40,
+		Address:        Address{"Apartment 14", "123 Example Street", "New York City"},
+		SystemRoles:    []int{183493, 1038492, 22},
+		EnableAuditing: false,
+	}
+	endpoint := make([]Endpoint, 1)
+	endpoint[0] = WebSocketEndpoint{
+		Uri:         "ws://example.com/socket",
+		ContentType: "audio/l16;rate=16000",
+		Headers:     headers,
+	}
+	connect := ConnectAction{Endpoint: endpoint, From: "447770008888", Timeout: 3, Limit: 5, MachineDetection: "continue", EventMethod: "GET", EventUrl: url}
+	ncco.AddAction(connect)
+
+	// Generate JSON
+	j, _ := json.Marshal(ncco)
+	expected := `[{"action":"connect","endpoint":[{"type":"websocket","uri":"ws://example.com/socket","content-type":"audio/l16;rate=16000","headers":{"name":"J Doe","age":40,"address":{"line_1":"Apartment 14","line_2":"123 Example Street","city":"New York City"},"system_roles":[183493,1038492,22],"enable_auditing":false}}],"from":"447770008888","timeout":3,"limit":5,"machineDetection":"continue","eventUrl":["https://example.com/event"],"eventMethod":"GET"}]`
+	if string(j) != expected {
+		t.Errorf("Unexpected JSON format for: Connect action with WebSocket endpoint\nGenerated: %s\nExpected: %s", string(j), expected)
+	}
+}
 func TestNccoStreamSimple(t *testing.T) {
 	ncco := Ncco{}
 	stream := StreamAction{StreamUrl: []string{"https://example.com/music.mp3"}}
