@@ -10,28 +10,23 @@ on:
 jobs:
   lint:
     name: Standards checks
-    strategy:
-      fail-fast: false
-      matrix:
-        go-version: ["1.11", "1.12", "1.13", "1.14", "1.15"]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: golangci/golangci-lint-action@v2
+      - uses: actions/setup-go@v7
         with:
-          version: v1.29
-          args: -v --skip-dirs internal
+          go-version: "1.25.13"
+      - uses: actions/checkout@v7
+      - uses: golangci/golangci-lint-action@v9
+        with:
+          version: v2.13.1
+          args: --verbose --path-exclude internal
 
   test:
     name: Run tests
-    strategy:
-      fail-fast: false
-      matrix:
-        go-version: ["1.11", "1.12", "1.13", "1.14", "1.15"]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/setup-go@v2
+      - uses: actions/setup-go@v7
         with:
-          go-version: ${{ matrix.go-version }}
-      - uses: actions/checkout@v2
+          go-version: "1.25.13"
+      - uses: actions/checkout@v7
       - run: go test -v github.com/vonage/vonage-go-sdk github.com/vonage/vonage-go-sdk/jwt github.com/vonage/vonage-go-sdk/ncco
